@@ -1,6 +1,55 @@
 import { useState } from "react";
-import { KeyRound, BarChart3 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+
+const LogoIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="6" fill="#00D97E" />
+    <text x="8" y="23" fontSize="20" fontWeight="bold" fill="white">
+      F
+    </text>
+  </svg>
+);
+
+const KeyIcon = () => (
+  <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+    <circle
+      cx="22"
+      cy="22"
+      r="12"
+      stroke="#00D97E"
+      strokeWidth="3"
+      fill="none"
+    />
+    <circle cx="22" cy="22" r="4" fill="#00D97E" />
+    <line
+      x1="30"
+      y1="30"
+      x2="48"
+      y2="48"
+      stroke="#00D97E"
+      strokeWidth="3"
+      strokeLinecap="round"
+    />
+    <line
+      x1="42"
+      y1="44"
+      x2="42"
+      y2="50"
+      stroke="#00D97E"
+      strokeWidth="3"
+      strokeLinecap="round"
+    />
+    <line
+      x1="46"
+      y1="48"
+      x2="46"
+      y2="52"
+      stroke="#00D97E"
+      strokeWidth="3"
+      strokeLinecap="round"
+    />
+  </svg>
+);
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -9,62 +58,61 @@ export default function ForgotPassword() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      // Mock de envio de email de recuperação
       navigate("/recovery-sent", { state: { email } });
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Logo */}
+    <div className="min-h-screen bg-gray-100">
+      {/* Logo no canto superior esquerdo */}
       <div className="p-6">
         <div className="flex items-center gap-2">
-          <div className="bg-primary p-2 rounded-lg">
-            <BarChart3 className="text-white" size={20} />
-          </div>
-          <h1 className="text-xl font-bold text-text-primary">FinançasEmDia</h1>
+          <LogoIcon />
+          <span className="text-xl font-bold text-text-primary">
+            <span className="font-extrabold">Finanças</span>EmDia
+          </span>
         </div>
       </div>
 
       {/* Card centralizado */}
       <div
         className="flex items-center justify-center px-8"
-        style={{ minHeight: "calc(100vh - 100px)" }}
+        style={{ minHeight: "calc(100vh - 88px)" }}
       >
-        <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-lg text-center">
-          <div className="mx-auto bg-primary/10 rounded-full w-20 h-20 flex items-center justify-center mb-6">
-            <KeyRound size={40} className="text-primary" />
+        <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-md text-center">
+          {/* Ícone chave */}
+          <div className="mx-auto mb-6 flex items-center justify-center">
+            <KeyIcon />
           </div>
-          <h1 className="text-2xl font-bold text-text-primary mb-4">
+
+          <h1 className="text-2xl font-bold text-text-primary mb-3">
             Recuperar senha
           </h1>
-          <p className="text-text-secondary mb-8">
-            Insira seu e-mail e enviaremos instruções para redefinir sua senha.
+          <p className="text-text-secondary text-sm mb-8">
+            Insira seu e-mail e enviaremos instruções
+            <br />
+            para redefinir sua senha.
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Seu endereço de e-mail"
+              className="w-full px-4 py-3 border-2 border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm placeholder:text-gray-400"
+              required
+            />
+            <button
+              type="submit"
+              className="w-full py-3 rounded-lg text-base font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
+            >
+              Enviar instruções
+            </button>
             <div>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Seu endereço de e-mail"
-                className="w-full px-4 py-3 border-2 border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-center placeholder:text-gray-400"
-                required
-              />
-            </div>
-            <div>
-              <button
-                type="submit"
-                className="w-full py-3 px-4 rounded-lg text-base font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
-              >
-                Enviar instruções
-              </button>
-            </div>
-            <div className="text-center">
               <Link
                 to="/login"
-                className="font-medium text-sm text-primary hover:text-primary/90"
+                className="text-sm font-medium text-primary hover:text-primary/80"
               >
                 Voltar para o login
               </Link>

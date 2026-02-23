@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { BarChart3, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+
+/* Ícone "F" estilizado do logo */
+const LogoIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="6" fill="#00D97E" />
+    <text x="8" y="23" fontSize="20" fontWeight="bold" fill="white">
+      F
+    </text>
+  </svg>
+);
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,117 +21,97 @@ export default function Login() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock login - em produção, aqui faria a autenticação real
     if (email && password) {
       localStorage.setItem("isAuthenticated", "true");
       navigate("/");
-      window.location.reload(); // Recarrega para atualizar o estado de autenticação
+      window.location.reload();
     }
   };
 
   return (
     <div className="flex h-screen">
       {/* Left side - Login Form */}
-      <div className="w-1/2 flex items-center justify-center bg-gray-50 p-8">
-        <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-lg">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="bg-primary p-2 rounded-lg">
-              <BarChart3 className="text-white" size={24} />
-            </div>
+      <div className="w-1/2 flex items-center justify-center bg-gray-100 p-8">
+        <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-md">
+          {/* Logo */}
+          <div className="flex items-center gap-3 mb-3">
+            <LogoIcon />
             <h1 className="text-2xl font-bold text-text-primary">
-              FinançasEmDia
+              <span className="font-extrabold">Finanças</span>EmDia
             </h1>
           </div>
-          <p className="text-text-secondary mb-8">
-            Bem-vindo de volta. Por favor, faça login para gerenciar suas
-            finanças.
+          <p className="text-text-secondary text-sm mb-8">
+            Welcome back. Please log in to manage your finances.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">
-                Endereço de Email
+              <label className="block text-sm font-medium text-text-primary mb-1.5">
+                Email Address
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="exemplo@exemplo.com"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+                placeholder="Example@example.com"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">
-                Senha
+              <label className="block text-sm font-medium text-text-primary mb-1.5">
+                Password
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary pr-12"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary pr-12 text-sm"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <div className="flex items-center">
+              <div className="flex items-center gap-2">
                 <input
                   id="remember-me"
-                  name="remember-me"
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded cursor-pointer"
+                  className="h-4 w-4 accent-primary border-gray-300 rounded cursor-pointer"
                 />
                 <label
                   htmlFor="remember-me"
-                  className="ml-2 block text-sm text-text-secondary cursor-pointer"
+                  className="text-sm text-text-secondary cursor-pointer"
                 >
-                  Lembrar-me
+                  Remember me
                 </label>
               </div>
-              <div className="text-sm">
-                <Link
-                  to="/forgot-password"
-                  className="font-medium text-primary hover:text-primary/90"
-                >
-                  Esqueceu a senha?
-                </Link>
-              </div>
-            </div>
-            <div>
-              <button
-                type="submit"
-                className="w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-semibold text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
+              <Link
+                to="/forgot-password"
+                className="text-sm font-medium text-primary hover:text-primary/80"
               >
-                Entrar
-              </button>
+                Forgot password?
+              </Link>
             </div>
-            <div className="text-center">
-              <p className="text-sm text-text-secondary">
-                Não tem uma conta?{" "}
-                <Link
-                  to="/register"
-                  className="font-medium text-primary hover:text-primary/90"
-                >
-                  Cadastre-se
-                </Link>
-              </p>
-            </div>
+            <button
+              type="submit"
+              className="w-full py-3 rounded-lg text-base font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
+            >
+              Log In
+            </button>
           </form>
         </div>
       </div>
 
       {/* Right side - Illustration */}
-      <div className="w-1/2 bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center p-8">
+      <div className="w-1/2 bg-linear-to-br from-green-50 to-green-100 flex items-center justify-center p-8">
         <div className="relative w-full h-full max-w-2xl flex items-center justify-center">
           <svg viewBox="0 0 800 600" className="w-full h-auto">
             {/* Background circles */}

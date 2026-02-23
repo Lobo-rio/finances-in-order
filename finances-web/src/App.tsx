@@ -12,6 +12,7 @@ import Transactions from "./pages/Transactions";
 import Reports from "./pages/Reports";
 import Accounts from "./pages/Accounts";
 import Settings from "./pages/Settings";
+import Users from "./pages/Users";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -94,6 +95,16 @@ export default function App() {
             <PrivateRoute>
               <MainLayout>
                 <Settings />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <Users />
               </MainLayout>
             </PrivateRoute>
           }

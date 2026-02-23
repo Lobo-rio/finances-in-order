@@ -5,18 +5,21 @@ import {
   Wallet,
   Settings,
 } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const NavLink = ({
   icon,
   children,
+  href,
   active = false,
 }: {
   icon: React.ReactNode;
   children: React.ReactNode;
+  href: string;
   active?: boolean;
 }) => (
   <a
-    href="#"
+    href={href}
     className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
       active
         ? "bg-slate-700/50 text-white"
@@ -38,17 +41,45 @@ const Logo = () => (
 );
 
 export default function Sidebar() {
+  const location = useLocation();
+
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <aside className="w-64 bg-slate-800 text-white flex flex-col p-4">
       <Logo />
       <nav className="flex flex-col gap-2">
-        <NavLink icon={<Home size={20} />} active>
+        <NavLink icon={<Home size={20} />} href="/" active={isActive("/")}>
           Visão Geral
         </NavLink>
-        <NavLink icon={<ArrowLeftRight size={20} />}>Transações</NavLink>
-        <NavLink icon={<BarChart3 size={20} />}>Relatórios</NavLink>
-        <NavLink icon={<Wallet size={20} />}>Contas</NavLink>
-        <NavLink icon={<Settings size={20} />}>Configurações</NavLink>
+        <NavLink
+          icon={<ArrowLeftRight size={20} />}
+          href="/transactions"
+          active={isActive("/transactions")}
+        >
+          Transações
+        </NavLink>
+        <NavLink
+          icon={<BarChart3 size={20} />}
+          href="/reports"
+          active={isActive("/reports")}
+        >
+          Relatórios
+        </NavLink>
+        <NavLink
+          icon={<Wallet size={20} />}
+          href="/accounts"
+          active={isActive("/accounts")}
+        >
+          Contas
+        </NavLink>
+        <NavLink
+          icon={<Settings size={20} />}
+          href="/settings"
+          active={isActive("/settings")}
+        >
+          Configurações
+        </NavLink>
       </nav>
     </aside>
   );

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BarChart3, Check } from "lucide-react";
+import { Check } from "lucide-react";
 
 export default function Register() {
   const [fullName, setFullName] = useState("");
@@ -22,6 +22,14 @@ export default function Register() {
     hasSpecialChar,
   ].filter(Boolean).length;
 
+  const getStrengthColor = (index: number) => {
+    if (index >= passwordStrength) return "bg-gray-200";
+    if (passwordStrength === 1) return "bg-red-400";
+    if (passwordStrength === 2) return "bg-orange-400";
+    if (passwordStrength === 3) return "bg-yellow-400";
+    return "bg-primary";
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (
@@ -31,7 +39,6 @@ export default function Register() {
       password === confirmPassword &&
       acceptTerms
     ) {
-      // Mock registration
       localStorage.setItem("isAuthenticated", "true");
       navigate("/");
       window.location.reload();
@@ -41,196 +48,137 @@ export default function Register() {
   return (
     <div className="flex h-screen">
       {/* Left side - Registration Form */}
-      <div className="w-1/2 flex items-center justify-center bg-gray-50 p-8">
-        <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-lg">
+      <div className="w-1/2 flex items-center justify-center bg-gray-100 p-8">
+        <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-md">
           {/* Progress indicator */}
           <div className="mb-6">
             <p className="text-sm font-semibold text-primary mb-2">
               Step 1 of 2
             </p>
-            <div className="bg-gray-200 rounded-full h-2">
-              <div className="bg-primary h-2 rounded-full w-1/2 transition-all"></div>
+            <div className="bg-gray-200 rounded-full h-1.5">
+              <div className="bg-primary h-1.5 rounded-full w-1/2 transition-all" />
             </div>
           </div>
 
-          <h1 className="text-xl font-bold text-text-primary mb-8">
-            Cadastro de Usuário - FinançasEmDia
+          <h1 className="text-2xl font-bold text-text-primary mb-6">
+            User Registration - FinançasEmDia
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">
-                Nome Completo
-              </label>
-              <input
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder=""
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-              />
-            </div>
+            {/* Full Name */}
+            <input
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Full Name"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm"
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">
-                Endereço de Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder=""
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-              />
-            </div>
+            {/* Email */}
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email Address"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm"
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">
-                Senha
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder=""
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-              />
+            {/* Password + checklist side by side */}
+            <div className="flex gap-4 items-start">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-text-primary mb-1.5">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm"
+                />
+                {/* Strength meter */}
+                <div className="mt-2 flex gap-1">
+                  {[1, 2, 3, 4].map((level) => (
+                    <div
+                      key={level}
+                      className={`h-1.5 flex-1 rounded-full ${getStrengthColor(level)}`}
+                    />
+                  ))}
+                </div>
+                <p className="text-xs text-text-secondary mt-1">
+                  Strength meter
+                </p>
+              </div>
 
-              {/* Password strength meter */}
-              {password && (
-                <div className="mt-2">
-                  <div className="flex gap-1 mb-2">
-                    {[1, 2, 3, 4].map((level) => (
-                      <div
-                        key={level}
-                        className={`h-1 flex-1 rounded ${
-                          level <= passwordStrength
-                            ? "bg-primary"
-                            : "bg-gray-200"
-                        }`}
-                      />
-                    ))}
+              {/* Requirements checklist */}
+              <div className="pt-7 space-y-1 min-w-fit">
+                {[
+                  { label: "Min 8 chars", met: hasMinLength },
+                  { label: "One uppercase", met: hasUppercase },
+                  { label: "One number", met: hasNumber },
+                  { label: "One special char", met: hasSpecialChar },
+                ].map(({ label, met }) => (
+                  <div key={label} className="flex items-center gap-1.5">
+                    <Check
+                      size={13}
+                      className={met ? "text-primary" : "text-gray-300"}
+                    />
+                    <span
+                      className={`text-xs ${met ? "text-text-primary" : "text-text-secondary"}`}
+                    >
+                      {label}
+                    </span>
                   </div>
-                  <p className="text-xs text-text-secondary mb-1">
-                    Medidor de força
-                  </p>
-                </div>
-              )}
-
-              {/* Password requirements */}
-              <div className="mt-3 space-y-1">
-                <div className="flex items-center gap-2 text-xs">
-                  <Check
-                    size={14}
-                    className={hasMinLength ? "text-primary" : "text-gray-300"}
-                  />
-                  <span
-                    className={
-                      hasMinLength ? "text-text-primary" : "text-text-secondary"
-                    }
-                  >
-                    Mín 8 caracteres
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <Check
-                    size={14}
-                    className={hasUppercase ? "text-primary" : "text-gray-300"}
-                  />
-                  <span
-                    className={
-                      hasUppercase ? "text-text-primary" : "text-text-secondary"
-                    }
-                  >
-                    Uma maiúscula
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <Check
-                    size={14}
-                    className={hasNumber ? "text-primary" : "text-gray-300"}
-                  />
-                  <span
-                    className={
-                      hasNumber ? "text-text-primary" : "text-text-secondary"
-                    }
-                  >
-                    Um número
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <Check
-                    size={14}
-                    className={
-                      hasSpecialChar ? "text-primary" : "text-gray-300"
-                    }
-                  />
-                  <span
-                    className={
-                      hasSpecialChar
-                        ? "text-text-primary"
-                        : "text-text-secondary"
-                    }
-                  >
-                    Um caractere especial
-                  </span>
-                </div>
+                ))}
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">
-                Confirmar Senha
-              </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder=""
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
-              />
-            </div>
+            {/* Confirm Password */}
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm Password"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm"
+            />
 
-            <div className="flex items-start pt-2">
+            {/* Terms */}
+            <div className="flex items-start gap-2 pt-1">
               <input
                 id="terms"
-                name="terms"
                 type="checkbox"
                 checked={acceptTerms}
                 onChange={(e) => setAcceptTerms(e.target.checked)}
-                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded cursor-pointer mt-0.5"
+                className="h-4 w-4 accent-primary border-gray-300 rounded cursor-pointer mt-0.5"
               />
               <label
                 htmlFor="terms"
-                className="ml-2 block text-xs text-text-secondary cursor-pointer"
+                className="text-xs text-text-secondary cursor-pointer"
               >
-                Eu aceito os{" "}
-                <a href="#" className="text-primary hover:text-primary/90">
-                  Termos e Condições
+                I accept the{" "}
+                <a href="#" className="text-primary hover:underline">
+                  Terms & Conditions
                 </a>{" "}
-                e a{" "}
-                <a href="#" className="text-primary hover:text-primary/90">
-                  Política de Privacidade
+                and{" "}
+                <a href="#" className="text-primary hover:underline">
+                  Privacy Policy
                 </a>
                 .
               </label>
             </div>
 
-            <div className="pt-2">
-              <button
-                type="submit"
-                className="w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-semibold text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
-              >
-                Criar Conta
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="w-full py-3 rounded-lg text-base font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
+            >
+              Create Account
+            </button>
 
-            <div className="text-center pt-2">
+            <div className="text-center">
               <Link
                 to="/login"
-                className="text-sm font-medium text-primary hover:text-primary/90"
+                className="text-sm font-medium text-primary hover:text-primary/80"
               >
-                Voltar para Login
+                Back to Login
               </Link>
             </div>
           </form>
@@ -238,15 +186,12 @@ export default function Register() {
       </div>
 
       {/* Right side - Illustration */}
-      <div className="w-1/2 bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center p-8">
-        <div className="relative w-full h-full max-w-2xl flex items-center justify-center">
+      <div className="w-1/2 bg-linear-to-br from-green-50 to-teal-100 flex items-center justify-center p-8">
+        <div className="w-full h-full max-w-2xl flex items-center justify-center">
           <svg viewBox="0 0 800 600" className="w-full h-auto">
-            {/* Background circles */}
             <circle cx="200" cy="300" r="80" fill="#e5e7eb" opacity="0.5" />
             <circle cx="600" cy="250" r="100" fill="#d1d5db" opacity="0.4" />
             <circle cx="400" cy="450" r="120" fill="#e5e7eb" opacity="0.3" />
-
-            {/* Dollar signs with circles */}
             <g>
               <circle cx="350" cy="180" r="50" fill="#10b981" opacity="0.9" />
               <text
@@ -307,8 +252,6 @@ export default function Register() {
                 $
               </text>
             </g>
-
-            {/* Bar chart */}
             <g transform="translate(450, 200)">
               <rect
                 x="0"
@@ -343,8 +286,6 @@ export default function Register() {
                 rx="4"
               />
             </g>
-
-            {/* Trend arrow */}
             <g transform="translate(500, 150)">
               <path
                 d="M 0 80 L 50 60 L 100 50 L 150 30"
@@ -361,37 +302,6 @@ export default function Register() {
                 strokeLinecap="round"
               />
             </g>
-
-            {/* Decorative lines */}
-            <line
-              x1="550"
-              y1="250"
-              x2="650"
-              y2="250"
-              stroke="#d1d5db"
-              strokeWidth="2"
-              opacity="0.5"
-            />
-            <line
-              x1="550"
-              y1="270"
-              x2="630"
-              y2="270"
-              stroke="#d1d5db"
-              strokeWidth="2"
-              opacity="0.5"
-            />
-            <line
-              x1="550"
-              y1="290"
-              x2="680"
-              y2="290"
-              stroke="#d1d5db"
-              strokeWidth="2"
-              opacity="0.5"
-            />
-
-            {/* Plus signs */}
             <text x="650" y="450" fontSize="30" fill="#9ca3af" opacity="0.5">
               +
             </text>
